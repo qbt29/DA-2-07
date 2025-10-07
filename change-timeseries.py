@@ -1,30 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8  -*-
-# -*- mode:   python -*-
-
-# This file is part of the educational Data Analysis tasks.
-#
-# Copyright (C) 2025  ferrovovan
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
-"""
-DA-1-35: Работа с timeseries.
-Задача:
-Создание, преобразование, и использование столбца с временными метками (timeseries).
-"""
-
 import os
 import argparse
 import pandas as pd
@@ -138,7 +111,7 @@ def extract_parts(df: pd.DataFrame) -> pd.DataFrame:
             - "year" (год, int)
             - "hour" (час, int)
             - "weekday" (ден недели, int)
-            - "querter" (квартал, int)
+            - "quarter" (квартал, int)
 
     Raises:
         KeyError: Если отсутствует столбец "timestamp".
@@ -175,10 +148,12 @@ def display(df: pd.DataFrame, category = "weekday", kind='bar') -> None:
         :returns
             None
         :raises
-            KeyError: Если отсутствует столбец переданной категории.
+            KeyError: Если отсутствует столбец переданной категории или kind не является доступным вариантом графика.
     '''
     if category not in df.columns:
         raise KeyError(f"Отсутствует обязательный столбец '{category}'.")
+    if kind not in ['line', 'bar', 'barh', 'kde', 'density', 'area', 'hist', 'box', 'pie', 'scatter', 'hexbin']:
+        raise KeyError(f"'{kind}' не является допустимым типом графика.")
     df[category].value_counts().plot(kind=kind)
     plt.show()
 
@@ -205,7 +180,7 @@ def main_read_file(input_csv):
     result_df = extract_parts(transformed_df)
     # 4. Вывод плодов работы
     print(result_df)
-    display(result_df, "weekday")
+    display(result_df, "weekday", "pie")
 
 
 if __name__ == "__main__":
